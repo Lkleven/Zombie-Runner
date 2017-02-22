@@ -2,27 +2,15 @@
 using System.Collections;
 
 public class Helicopter : MonoBehaviour {
-
-	private bool called = false;
-	private AudioSource audioSource;
+	private Rigidbody rigidBody;
 
 	// Use this for initialization
 	void Start () {
-		audioSource = GetComponent<AudioSource> ();
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
+		rigidBody = GetComponent<Rigidbody> ();
 	
 	}
 
-	public void CallForHelicopter(){
-		called = true;
-		audioSource.Play ();
-	}
-
-	public bool IsCalled(){
-		return called;
+	void OnDispatchHelicopter(){
+		rigidBody.velocity = new Vector3 (0, 0, 50f);
 	}
 }
