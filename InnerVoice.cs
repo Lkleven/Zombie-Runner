@@ -19,7 +19,6 @@ public class InnerVoice : MonoBehaviour {
 		audioSource.clip = goodLandingArea;
 		audioSource.Play ();
 		areaSuitedForLanding = true;
-		//Invoke ("CallHeli", goodLandingArea.length + 1f);
 	}
 
 	void OnInnerVoiceNotClearArea(){

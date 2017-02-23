@@ -31,16 +31,21 @@ public class Player : MonoBehaviour {
 		transform.position = spawnPoints [randomSpawnNumber].transform.position;
 	}
 
-	void OnNotClearArea(){
+	/*void OnNotClearArea(){
 		BroadcastMessage ("OnInnerVoiceNotClearArea");	//InnerVoice.cs
-	}
+		Debug.Log("NOT CLEAR");
+	}*/
 
-	void OnFindClearArea(){
+	/*void OnFindClearArea(){
 		if(!heliCalled){
 			BroadcastMessage ("OnInnerVoiceFindClearArea");	//InnerVoice.cs
 			Invoke ("DropFlare", 3f);
 			//Spawn zombies
 		}
+	}*/
+
+	void SpawnZombies(){
+		Debug.Log ("ZOMBIES!!!");
 	}
 
 	void OnHeliCalled(){

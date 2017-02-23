@@ -4,8 +4,8 @@ using System.Collections;
 public class ClearArea : MonoBehaviour {
 
 	private float timeSinceLastTrigger = 0f;
-	private bool areaClear = false;
-	public GameObject areaHighlight;
+	private bool areaClear = false, helicopterCalled = false;
+	public GameObject areaHighlight, landingSite;
 
 	// Use this for initialization
 	void Start () {
@@ -13,28 +13,29 @@ public class ClearArea : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		timeSinceLastTrigger += Time.deltaTime;
-		if (timeSinceLastTrigger > 1f && !areaClear && Time.realtimeSinceStartup > 10f) {
-			areaClear = true;
-			SuitableArea ();
-
+		if(!helicopterCalled){
+			timeSinceLastTrigger += Time.deltaTime;
+			if (timeSinceLastTrigger > 1f && !areaClear && Time.realtimeSinceStartup > 10f) {
+				areaClear = true;
+				SuitableArea ();
+			}
 		}
 	}
 
 	void OnTriggerStay (Collider collider){
 		timeSinceLastTrigger = 0f;
 		areaClear = false;
-		NotSuitableArea ();
+		if (!helicopterCalled) {
+			NotSuitableArea ();
+		}
 	}
 
 	void SuitableArea(){
-		SendMessageUpwards ("OnFindClearArea");	//Player.cs
-		//areaHighlight.SetActive (true);
-		//areaHighlight.GetComponent<Projector> ().material.color = Color.green;
+		SendMessageUpwards ("OnInnerVoiceFindClearArea");	//InnerVoice.cs
 	}
 
 	void NotSuitableArea(){
-		SendMessageUpwards ("OnNotClearArea");	//Player.cs
+		SendMessageUpwards ("OnInnerVoiceNotClearArea");	//InnerVoice.cs
 	}
 
 	void OnAttemptCall(){
@@ -42,6 +43,9 @@ public class ClearArea : MonoBehaviour {
 			StartCoroutine (areaBlink (Color.red));
 		} else {
 			StartCoroutine (areaBlink (Color.green));
+			Instantiate (landingSite, transform.position, Quaternion.identity);
+			helicopterCalled = true;
+			SendMessageUpwards ("SpawnZombies");
 		}
 	}
 
