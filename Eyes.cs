@@ -19,4 +19,10 @@ public class Eyes : MonoBehaviour {
 			eyes.fieldOfView = defaultFOV;
 		}
 	}
+
+	void OnTriggerEnter(Collider col){
+		if(col.name.Equals("Zombie(Clone)")){
+			Debug.Log ("Player Hit");
+		}
+	}
 }

@@ -45,15 +45,11 @@ public class Player : MonoBehaviour {
 	}*/
 
 	void SpawnZombies(){
-		Debug.Log ("ZOMBIES!!!");
+		GameObject zombieSpawner = GameObject.FindObjectOfType<ZombieSpawner> ().gameObject;
+		zombieSpawner.GetComponent<ZombieSpawner> ().spawning = true;
 	}
 
 	void OnHeliCalled(){
 		heliCalled = true;
 	}
-
-	void DropFlare(){
-		//Drop a flare
-	}
-
 }
