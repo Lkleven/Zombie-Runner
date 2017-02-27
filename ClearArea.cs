@@ -6,6 +6,8 @@ public class ClearArea : MonoBehaviour {
 	private float timeSinceLastTrigger = 0f;
 	private bool areaClear = false, helicopterCalled = false;
 	public GameObject areaHighlight, landingSite;
+	private float maxHeightDifference = 3f;
+
 
 	// Use this for initialization
 	void Start () {
@@ -13,14 +15,37 @@ public class ClearArea : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(!helicopterCalled){
+		if (!helicopterCalled) {
 			timeSinceLastTrigger += Time.deltaTime;
 			if (timeSinceLastTrigger > 1f && !areaClear && Time.realtimeSinceStartup > 10f) {
-				areaClear = true;
-				SuitableArea ();
+				if (CheckAreaFlatEnoughForLanding ()) {
+					areaClear = true;
+					SuitableArea ();
+				}
 			}
 		}
 	}
+
+	//Throws raycast at set points within the landing area prefab in inspector
+	//Returns true if the height difference is good enough
+	//Returns false if terrain height difference is too large
+	bool CheckAreaFlatEnoughForLanding(){
+		float max = 0f, min = 0f;
+		RaycastHit hitInfo;
+
+		foreach (Transform point in transform) {
+			Debug.DrawRay (point.position, new Vector3 (0, -50, 0), Color.magenta);
+			if (Physics.Raycast (point.position, Vector3.down, out hitInfo, Mathf.Infinity, LayerMask.GetMask ("Solid Ground"))) {
+				if (hitInfo.point.y > max || max == 0) {
+					max = hitInfo.point.y;
+				} else if (hitInfo.point.y < min || min == 0) {
+					min = hitInfo.point.y;
+				}
+			}
+		}
+		return (max - min) < maxHeightDifference;
+	}
+		
 
 	void OnTriggerStay (Collider collider){
 		timeSinceLastTrigger = 0f;

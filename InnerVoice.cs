@@ -4,7 +4,6 @@ using System.Collections;
 public class InnerVoice : MonoBehaviour {
 	private AudioSource audioSource; //player inner voice
 	private bool areaSuitedForLanding = false;
-	private bool landingAreaSet = false;
 	public AudioClip goodLandingArea, whatHappened, areaNotSuited;
 
 

@@ -4,7 +4,6 @@ using System.Collections;
 public class Helicopter : MonoBehaviour {
 	public GameObject mainRotor;
 
-	private Rigidbody rigidBody;
 	private Vector3 startPos, destination;
 	private float startTime;
 	private bool dispatched = false, landing = false;
@@ -14,11 +13,11 @@ public class Helicopter : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		startPos = transform.position;
-		rigidBody = GetComponent<Rigidbody> ();
 		helicopter = transform.GetChild (0).gameObject;
 		animator = helicopter.GetComponent<Animator> ();
-			//GetComponent<Animator> ();
-	
+		animator.enabled = false;							//An active animator prevents script from rotating the rotor in Update() below
+
+
 	}
 
 	void Update(){
@@ -29,17 +28,9 @@ public class Helicopter : MonoBehaviour {
 		}
 
 		if (transform.position == destination && !landing) {
+			animator.enabled = true;
 			landing = true;
-			Debug.Log ("LAND");
-			//animator.SetTrigger ("HelicopterFlareLanding");
-			animator.Play("Helicopter Flare Land");
-		}
-
-		if (landing && !animator.GetCurrentAnimatorStateInfo (0).IsName ("Helicopter Flare Land")) {
-			Vector3 stayHere = helicopter.transform.position;
-			Debug.Log ("STAY");
-			helicopter.transform.position = stayHere;
-			helicopter.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.FreezePositionZ;
+			animator.SetTrigger ("HelicopterFlareLanding");
 		}
 	}
 
@@ -48,17 +39,22 @@ public class Helicopter : MonoBehaviour {
 		startTime = Time.time;
 
 		destination = GameObject.FindGameObjectWithTag ("LandingArea").transform.position;
-		float temp = destination.z;
-		temp-= 40;
-		destination.z = temp;
-		Debug.Log (destination);
-		//rigidBody.velocity = new Vector3 (0, 0, 50f);
+		float tempZ = destination.z;
+		float tempY = destination.y;
+		tempZ -= 40f;
+		tempY += 0.7f;
+		destination.z = tempZ;
+		destination.y = tempY;
 	}
+		
 
-	void OnCollisionEnter(Collision col){
-		Debug.Log (col);
+	//Freezes the helicopters position in place
+	//Temporary solution for wonky animations and issues with heli going through the ground after completed animation
+	//Called from landing animation "Helicopter Land"
+	void FreezePosition(){
+		Rigidbody rb = GetComponent<Rigidbody> ();
+		rb.constraints = RigidbodyConstraints.FreezePosition;
+		Animator animator = GetComponent<Animator> ();
+		animator.enabled = false;
 	}
-
-	private IEnumerator WaitForAnimation (Animation animation){
-		do{ yield return null;} while (animation.isPlaying);}
 }
