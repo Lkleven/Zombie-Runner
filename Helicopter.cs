@@ -24,7 +24,7 @@ public class Helicopter : MonoBehaviour {
 		mainRotor.transform.Rotate (Vector3.forward * Time.deltaTime * 3600);	//degrees per second
 
 		if (dispatched && !landing) {
-			transform.position = Vector3.Lerp (startPos, destination, (Time.time - startTime) / 15);
+			transform.position = Vector3.Lerp (startPos, destination, (Time.time - startTime) / 300);
 		}
 
 		if (transform.position == destination && !landing) {
